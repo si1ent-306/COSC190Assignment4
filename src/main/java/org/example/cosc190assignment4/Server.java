@@ -2,6 +2,7 @@ package org.example.cosc190assignment4;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -24,7 +25,8 @@ public class Server {
                 System.out.println("Client connected: "
                         + connectedClient.getLocalAddress()
                         + "/"
-                        + connectedClient.getPort() );
+                        + connectedClient.getPort());
+                createFile();
 
                 // receive the request from the connected client
                 DataInputStream inputStreamFromClient =
@@ -43,7 +45,19 @@ public class Server {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
-
     }
+        private static void createFile() throws IOException {
+
+            File fileObj = new File("data_files/info.json");
+
+            if( ! fileObj.exists() ){
+                if( ! new File("data_files/info.json").createNewFile() ){
+                    throw new IOException("File creation failed");
+                }
+            } else {
+                throw new IOException("File already exists");
+            }
+
+        }
+
 }
