@@ -1,9 +1,6 @@
 package org.example.cosc190assignment4;
 
-import java.io.DataInputStream;
-import java.io.DataOutputStream;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Date;
@@ -21,22 +18,28 @@ public class Server {
                 // wait for clients to connect
                 System.out.println("Waiting for client to connect");
 
-                Socket connectedClient = serverSocket.accept();
-                System.out.println("Client connected: "
-                        + connectedClient.getLocalAddress()
+                Socket connectedClient1 = serverSocket.accept();
+                Socket connectedClient2 = serverSocket.accept();
+                System.out.println("Client 1 connected: "
+                        + connectedClient1.getLocalAddress()
                         + "/"
-                        + connectedClient.getPort());
+                        + connectedClient1.getPort());
+                System.out.println("Client 2 connected: "
+                        + connectedClient2.getLocalAddress()
+                        + "/"
+                        + connectedClient2.getPort());
+
                 createFile();
 
                 // receive the request from the connected client
                 DataInputStream inputStreamFromClient =
-                        new DataInputStream(connectedClient.getInputStream());
+                        new DataInputStream(connectedClient1.getInputStream());
                 String messageFromClient = inputStreamFromClient.readUTF();
-                System.out.println("Client says: " + messageFromClient);
+                FileWriter fileWriter = new FileWriter("data_file/info.json");
 
                 // send the response to the connected client
                 DataOutputStream outputStreamToClient =
-                        new DataOutputStream(connectedClient.getOutputStream());
+                        new DataOutputStream(connectedClient1.getOutputStream());
                 String messageToClient = "Hello" + new Date();
                 System.out.println("Server responds: " + messageToClient);
                 outputStreamToClient.writeUTF(messageToClient);

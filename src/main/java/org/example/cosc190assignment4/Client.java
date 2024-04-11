@@ -1,6 +1,8 @@
 package org.example.cosc190assignment4;
 
-public class Client {
+import java.io.Serializable;
+
+public class Client implements Serializable {
     String Username;
     String Handle;
     String Email;
@@ -9,6 +11,9 @@ public class Client {
         Username = username;
         Handle = handle;
         Email = email;
+    }
+
+    public Client() {
     }
 
     public String getUsername() {
