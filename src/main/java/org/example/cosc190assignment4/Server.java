@@ -1,30 +1,42 @@
 package org.example.cosc190assignment4;
 
 import java.io.*;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
+    private static int clientNo = 0;
     public static void main(String []args) {
+        startServer();
+            // create the server socket to connect
+            // requires a port at which the server will serv
+    }
 
-        // create the server socket to connect
-        // requires a port at which the server will serve
+    private static void startServer(){
         try (ServerSocket serverSocket = new ServerSocket(9000)){
             System.out.println("Server started. Serving at port: " + 9000);
             while (true) {
                 // wait for clients to connect
                 System.out.println("Waiting for client to connect");
 
-                Socket connectedClient1 = serverSocket.accept();
-                System.out.println("Client 1 connected: "
-                        + connectedClient1.getLocalAddress()
+                //Client 1
+                Socket clientSocket = serverSocket.accept();
+                System.out.println("Client connected: "
+                        + clientSocket.getLocalAddress()
                         + "/"
-                        + connectedClient1.getPort());
+                        + clientSocket.getPort());
+                new DataOutputStream(
+                        clientSocket.getOutputStream()).writeInt(clientNo++);
+                Client client = reciveClientObject(clientSocket);
+
+                Thread connectedThread = new Thread(() -> handleClientConnection(clientSocket, client));
+                connectedThread.setDaemon(true);
+                connectedThread.start();
+                //Client 2
 //                createFile();
 
                 // receive the request from the connected client
-                Client client = reciveClientObject(connectedClient1);
-                handleClientConnection(connectedClient1, client);
                 // send the response to the connected client
 
             }
@@ -34,8 +46,8 @@ public class Server {
         }
     }
 
-    private static Client reciveClientObject(Socket connectedClient1) throws IOException, ClassNotFoundException {
-        ObjectInputStream on = new ObjectInputStream(connectedClient1.getInputStream());
+    private static Client reciveClientObject(Socket connectedClient) throws IOException, ClassNotFoundException {
+        ObjectInputStream on = new ObjectInputStream(connectedClient.getInputStream());
         Client clientObject = (Client) on.readObject();
         System.out.println(clientObject);
         return clientObject;
@@ -60,8 +72,14 @@ public class Server {
     private static void handleClientConnection(Socket clientSocket, Client clientObject) {
         try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream())) {
             while (true) {
-                    String messageRecived = inputStream.readUTF();
-                    System.out.println(clientObject.Handle + ": " + messageRecived);
+
+                String messageRecived = inputStream.readUTF();
+                System.out.println(clientObject.Handle + ": " + messageRecived);
+
+
+                DataOutputStream outputStream = new DataOutputStream(clientSocket.getOutputStream());
+                outputStream.writeUTF(messageRecived);
+                outputStream.flush();
                 }
 //                Platform.runLater(() -> {
 //                    showMessage("Received message: " + messageRecived + "\n");
@@ -74,6 +92,7 @@ public class Server {
 //                    + ", Port" + clientSocket.getPort()
 //                    + "\n"));
         }
+
     }
     private void showMessage(String message) {
 //        textArea.appendText(message);

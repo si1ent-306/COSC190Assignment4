@@ -13,6 +13,7 @@ public class ClientDemo {
         // receive the response from the server
         while (true){
             sendClientMessage(socket, scanner.nextLine());
+            reiciveClientData(socket);
         }
 
     }
@@ -51,7 +52,8 @@ public class ClientDemo {
     }
     private static void reiciveClientData(Socket socket) throws IOException {
         DataInputStream inputStreamToServer = new DataInputStream(socket.getInputStream());
-        System.out.println(inputStreamToServer.readUTF());
+        String message = inputStreamToServer.readUTF();
+        System.out.println(message);
     }
 
 }
