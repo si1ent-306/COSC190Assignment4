@@ -9,8 +9,12 @@ public class ClientDemo {
         Socket socket = new Socket("localhost", 9000);
         //Send Client object
         sendClientData(socket);
+        Scanner scanner = new Scanner(System.in);
         // receive the response from the server
-        System.out.println("Server says: " + reiciveClientData(socket));
+        while (true){
+            sendClientMessage(socket, scanner.nextLine());
+        }
+
     }
     private static Client getClientData() {
 
@@ -41,13 +45,13 @@ public class ClientDemo {
             throw new RuntimeException(e);
         }
     }
-    private static void sendClientData(Socket socket, String message) throws IOException {
-        DataOutputStream outputStreamToServer = new DataOutputStream(socket.getOutputStream());
-        outputStreamToServer.writeUTF(message);
+    private static void sendClientMessage(Socket socket, String message) throws IOException {
+            DataOutputStream outputStreamToServer = new DataOutputStream(socket.getOutputStream());
+            outputStreamToServer.writeUTF(message);
     }
-    private static String reiciveClientData(Socket socket) throws IOException {
+    private static void reiciveClientData(Socket socket) throws IOException {
         DataInputStream inputStreamToServer = new DataInputStream(socket.getInputStream());
-        return (String) inputStreamToServer.readUTF();
+        System.out.println((String) inputStreamToServer.readUTF());
     }
 
 }
