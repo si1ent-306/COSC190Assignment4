@@ -1,7 +1,6 @@
 package org.example.cosc190assignment4;
 
 import java.io.*;
-import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -56,7 +55,7 @@ public class Server {
         //textArea.appendText(message);
     }
 
-    private static void createFile() throws IOException {
+    private static void createFile() {
 //                FileWriter fileWriter = new FileWriter("data_file/info.json");
 //                fileWriter.write(on.readUTF());
 //

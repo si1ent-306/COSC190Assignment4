@@ -4,8 +4,8 @@ import java.io.*;
 import java.net.Socket;
 
 public class ClientHandler implements Runnable{
-    private Socket clientSocket1;
-    private Socket clientSocket2;
+    private final Socket clientSocket1;
+    private final Socket clientSocket2;
     private DataInputStream fromClient1;
     private DataInputStream fromClient2;
     private DataOutputStream toClient1;

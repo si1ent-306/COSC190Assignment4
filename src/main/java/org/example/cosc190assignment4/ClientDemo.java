@@ -1,7 +1,5 @@
 package org.example.cosc190assignment4;
 
-import javafx.scene.paint.Color;
-
 import java.io.*;
 import java.net.Socket;
 import java.util.Scanner;
