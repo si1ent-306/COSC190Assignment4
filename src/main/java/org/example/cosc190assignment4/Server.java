@@ -23,11 +23,13 @@ public class Server {
                 //Client 1
                 Socket clientSocket = serverSocket.accept();
                 System.out.println("Client connected: "
+                        +
+                        clientNo++
                         + clientSocket.getLocalAddress()
                         + "/"
                         + clientSocket.getPort());
                 new DataOutputStream(
-                        clientSocket.getOutputStream()).writeInt(clientNo++);
+                        clientSocket.getOutputStream()).writeInt(clientNo);
                 Client client = reciveClientObject(clientSocket);
 
                 Thread connectedThread = new Thread(() -> handleClientConnection(clientSocket, client));

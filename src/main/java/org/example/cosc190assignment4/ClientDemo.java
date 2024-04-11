@@ -13,7 +13,7 @@ public class ClientDemo {
         sendClientData(socket);
         Scanner scanner = new Scanner(System.in);
         // receive the response from the server
-        while (true){
+        while (true) {
             sendClientMessage(socket, scanner.nextLine());
             receiveClientData(socket);
         }
@@ -74,7 +74,8 @@ public class ClientDemo {
 //                    break;
 //                default:
 //                    textColor = "Black"; // Default to black color
-//                    break;
+//                    break;ew
+
 //
 }
         //else, file already exists, so read it and send it off.
@@ -105,10 +106,13 @@ public class ClientDemo {
     private static void sendClientMessage(Socket socket, String message) throws IOException {
         DataOutputStream outputStreamToServer = new DataOutputStream(socket.getOutputStream());
         outputStreamToServer.writeUTF(message);
+        System.out.println("Message sent: " + message);
     }
     private static void receiveClientData(Socket socket) throws IOException {
-        DataInputStream inputStreamToServer = new DataInputStream(socket.getInputStream());
-        System.out.println(inputStreamToServer.readUTF());
+        DataInputStream inputStreamFromServer =
+                new DataInputStream(socket.getInputStream());
+        String messageFromServer = inputStreamFromServer.readUTF();
+        System.out.println("Server says: " + messageFromServer);
     }
 
 }
