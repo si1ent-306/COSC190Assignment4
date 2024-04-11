@@ -37,7 +37,7 @@ public class ClientDemo {
         return client;
     }
     private static void sendClientData(Socket socket) {
-        ObjectOutputStream outputStreamToServer = null;
+        ObjectOutputStream outputStreamToServer;
         try {
             outputStreamToServer = new ObjectOutputStream(socket.getOutputStream());
             outputStreamToServer.writeObject(getClientData());
@@ -51,7 +51,7 @@ public class ClientDemo {
     }
     private static void reiciveClientData(Socket socket) throws IOException {
         DataInputStream inputStreamToServer = new DataInputStream(socket.getInputStream());
-        System.out.println((String) inputStreamToServer.readUTF());
+        System.out.println(inputStreamToServer.readUTF());
     }
 
 }

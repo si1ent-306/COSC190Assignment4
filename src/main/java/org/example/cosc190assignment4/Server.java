@@ -1,21 +1,16 @@
 package org.example.cosc190assignment4;
 
-import javafx.application.Platform;
-
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Date;
 
 public class Server {
     public static void main(String []args) {
 
         // create the server socket to connect
         // requires a port at which the server will serve
-        try {
-            ServerSocket serverSocket = new ServerSocket(9000);
+        try (ServerSocket serverSocket = new ServerSocket(9000)){
             System.out.println("Server started. Serving at port: " + 9000);
-
             while (true) {
                 // wait for clients to connect
                 System.out.println("Waiting for client to connect");
@@ -47,7 +42,7 @@ public class Server {
         //textArea.appendText(message);
     }
 
-    //    private static void createFile() throws IOException {
+    private static void createFile() throws IOException {
 //                FileWriter fileWriter = new FileWriter("data_file/info.json");
 //                fileWriter.write(on.readUTF());
 //
@@ -61,12 +56,11 @@ public class Server {
 //                throw new IOException("File already exists");
 //            }
 //
-//        }
+        }
     private static void handleClientConnection(Socket clientSocket, Client clientObject) {
         try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream())) {
             while (true) {
-                    DataInputStream in = new DataInputStream(clientSocket.getInputStream());
-                    String messageRecived = (String) in.readUTF();
+                    String messageRecived = inputStream.readUTF();
                     System.out.println(clientObject.Handle + ": " + messageRecived);
                 }
 //                Platform.runLater(() -> {
