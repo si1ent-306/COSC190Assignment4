@@ -1,5 +1,7 @@
 package org.example.cosc190assignment4;
 
+import javafx.application.Platform;
+
 import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -19,37 +21,27 @@ public class Server {
                 System.out.println("Waiting for client to connect");
 
                 Socket connectedClient1 = serverSocket.accept();
-                Socket connectedClient2 = serverSocket.accept();
                 System.out.println("Client 1 connected: "
                         + connectedClient1.getLocalAddress()
                         + "/"
                         + connectedClient1.getPort());
-                System.out.println("Client 2 connected: "
-                        + connectedClient2.getLocalAddress()
-                        + "/"
-                        + connectedClient2.getPort());
-
                 createFile();
 
                 // receive the request from the connected client
-                DataInputStream inputStreamFromClient =
-                        new DataInputStream(connectedClient1.getInputStream());
-                String messageFromClient = inputStreamFromClient.readUTF();
+                ObjectInputStream on = new ObjectInputStream(connectedClient1.getInputStream());
                 FileWriter fileWriter = new FileWriter("data_file/info.json");
+                fileWriter.write(on.readUTF());
+                handleClientConnection(connectedClient1);
 
                 // send the response to the connected client
-                DataOutputStream outputStreamToClient =
-                        new DataOutputStream(connectedClient1.getOutputStream());
-                String messageToClient = "Hello" + new Date();
-                System.out.println("Server responds: " + messageToClient);
-                outputStreamToClient.writeUTF(messageToClient);
+
             }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
-        private static void createFile() throws IOException {
+    private static void createFile() throws IOException {
 
             File fileObj = new File("data_files/info.json");
 
@@ -62,5 +54,32 @@ public class Server {
             }
 
         }
+    private static void handleClientConnection(Socket clientSocket) {
+        try (DataInputStream inputStream = new DataInputStream(clientSocket.getInputStream())) {
+            while (true) {
+                DataOutputStream dataOutputStream = new DataOutputStream(clientSocket.getOutputStream());
+                String messageRecived = inputStream.readUTF();
+                String messageToSend = inputStream.readUTF();
+                dataOutputStream.writeUTF(messageToSend);
+                dataOutputStream.flush();
+
+                Platform.runLater(() -> {
+//                    showMessage("Received message: " + messageRecived + "\n");
+//                    showMessage("Sending message: " + messageToSend + "\n");
+                });
+
+
+            }
+        } catch (IOException e) {
+//            Platform.runLater(() -> showMessage("Client disconnected: "
+//                    + clientSocket.getInetAddress()
+//                    + ", Port" + clientSocket.getPort()
+//                    + "\n"));
+        }
+    }
+    private void showMessage(String message) {
+//        textArea.appendText(message);
+    }
+
 
 }
